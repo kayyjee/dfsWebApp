@@ -1,0 +1,107 @@
+<div class="home-background">
+	<div class="col-md-3">
+		<div ng-hide="currentUser" class="login-box">
+			<h4 class="login-label">Login</h4>
+			<br>
+			<div class="input-group">
+				<input type="text" size="30" placeholder="Username" ng-model="username" >
+			</div>
+			<br>
+			<div class="input-group">
+				<input type="password" size="30" placeholder="Password" ng-model="password">
+			</div>
+			<br><br>
+			<button type="button" class="btn btn-primary btn-lg" ng-click="signIn()">Sign In</button>
+			<br><br>
+			<a href="#/signup">Not a member? Sign up </a>			
+			<br><br>
+		</div>
+		<div ng-show="currentUser" class="homeLeftColumn">
+			<div class="noTeamUnlocked" ng-show="!hasTeam && unlockTeams">
+				<h4 class="youDontHaveTeam">You don't have a team yet!</h4>
+				<a href="#/pickplayers"> <button type="button" class="btn btn-primary btn-lg">Pick Players</button>
+				</a>
+			</div>
+			<div class="noTeamLocked" ng-show="!hasTeam && !unlockTeams" style="color: #CCCCCC; font-size: 18px;"">
+				<label>Game has started</label>&nbsp;&nbsp;&nbsp;<div class="glyphicon glyphicon-lock"></div>
+					
+			</div>
+			<div class="yourTeamArea" ng-show="hasTeam">
+				<h5>Your Team&nbsp;&nbsp;&nbsp;<div class="glyphicon glyphicon-lock" ng-hide="unlockTeams"></div></h5>
+				<div class="displayPlayers" ng-repeat="teamPlayer in teamPlayers" ng-class="">
+					<div class="panel-body">
+						<img ng-src="img/logos/{{teamPlayer.team}}.png" alt="logo"/> 
+						<span class="player-name"> {{ teamPlayer.name }}</span> 
+							
+					</div>
+				</div>
+				<div class="underYourTeam">
+					<a href="#/pickplayers" ng-show="hasTeam && unlockTeams"> 
+					<button type="button" class="btn btn-success btn-editTeam">Edit</button></a>
+					<div ng-hide="unlockTeams">
+					<label>Game has started, your team is locked</label>&nbsp;&nbsp;&nbsp;<div class="glyphicon glyphicon-lock"></div>
+					</div>
+				</div>
+
+			</div>
+		</div>									
+		<br><br>			
+	</div>
+	<div class="col-md-6" style="text-align: center">
+		<div class="middleColumn">
+		<div class="insideMiddleColumn">
+			<div id="clockdiv">
+  				<div>
+    				<span class="days"></span>
+    				<div class="smalltext">Days</div>
+  				</div>
+ 				<div>
+   					<span class="hours"></span>
+   					<div class="smalltext">Hours</div>
+  				</div>
+  				<div>
+   					<span class="minutes"></span>
+    			<div class="smalltext">Minutes</div>
+  				</div>
+  				<div>
+    				<span class="seconds"></span>
+    				<div class="smalltext">Seconds</div>
+  				</div>
+			</div>
+			<div class="nextGameLabel">
+				Until Next Game!
+			</div>
+			<div class="gamesToday" style="text-align: center;">
+				<br><br>				
+			</div>
+		</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<div class="chatContainer">
+			<div class="notWell" ng-model="well">
+				<div class="chatHeader">LAX Chat
+				</div>
+				<div class="glyphicon-numUsers">
+					<span class="glyphicon glyphicon-user"></span>
+					&nbsp;&nbsp;{{numUsers}} &nbsp;&nbsp;
+				</div>	
+			</div>
+			 <div class="chatArea">
+       			<ul class="messages"/>
+      		</div>
+			<!the actual form>
+			<div class="messageArea">
+				<div class="formGroup" ng-show="joinedChat">
+					
+					<input type ="text" placeholder="Type here..." class="formControl" ng-model="textArea"  maxlength="100" ng-keyup="$event.keyCode == 13 ? submitMessage() : null"/>
+					<br/>
+				</div>
+			<button type="submit" class="btn btn-default btn-block" ng-click="joinChat()" ng-hide="!currentUser || joinedChat">Join Chat</button>
+			<div class="panel panel-default messageArea-NotLoggedIn" ng-hide="currentUser">
+				<h4> Log-in to chat </h4>
+			</div>
+			</div>
+		</div>
+	</div>
+</div>

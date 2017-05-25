@@ -1,0 +1,75 @@
+<div ng-show="currentUser">
+	<div class="col-md-5">
+		<h4 class="pickPlayers-label"> Pick Players From The List </h4>	
+		<div class=playerListArea>
+ 			<table>
+ 				<tr style="color:#DDDDDD; background-color: #202020; text-align: center; ">
+ 					
+ 					<td style="padding-left:12px;">Team </td>
+ 					<td style="padding-left:12px;">Name</td>
+ 					<td style="padding-left:12px;">Position</td>
+ 					<td style="padding-left:12px; ">Price</td>
+ 					<td style="padding-left:12px;">Stat</td>
+
+ 					<td>Add</td>
+ 				</tr>
+ 				<tr ng-repeat="player in players" ng-class="{'gray-player' : $even, 'other-player' : $odd}" style="text-align: center; font-weight: bold; font-size: 12px;">
+ 					<td class="playerListAreaLogo"><img ng-src="img/logos/{{player.team}}.png" alt="logo"/> </td>
+ 					<td class="playerListAreaName">{{player.name}}</td>
+ 					<td class="playerListAreaPosition">{{player.position}}</td>
+ 					<td class="playerListAreaPrice">&#36;{{player.price}}</td>
+ 					<td class="playerListAreaStat">{{player.stat}} {{player.statVal}}</td>
+ 					<td><a href ng-click="addToTeam(player, $index)"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></td>
+ 				</tr>
+ 			</table>
+ 		</div>
+ 		<br/>
+ 		<a href="#/home"><button type="button" class="btn btn-default btn-block">Cancel</button></a>
+ 	</div>
+	<div class="col-md-2">
+		<div class="budget" ng-init="budget">
+			You Have <br/>
+			<h4>
+				<span class="budget-value" style="padding:3px; "> {{budget}} &nbsp;&#36;
+				</span>
+			</h4>
+			<br/>
+			Average/Player <br/>
+			<h4>
+				<span class="avg-budget" style="padding:3px; "> {{averageBudget}}&nbsp;&#36;
+				</span>
+			</h4>
+ 		</div> 
+	</div>				
+	<div class="col-md-5">
+	<h4 class="pickPlayers-label"> Your Team </h4>
+		<div class=playerListArea>
+ 			<table>
+ 				<tr style="color:#DDDDDD; background-color: #202020; text-align: center; ">
+ 					<td style="padding-left:10px;width: 10%;"">Team </td>
+ 					<td style="padding-left:10px; width: 33%;">Name</td>
+ 					<td style="padding-left:10px; width: 8%;">Position</td>
+ 					<td style="padding-left:10px; width: 12%;">Price</td>
+ 					<td style="padding-left:10px; width: 20%;">Stat</td>
+ 					<td style="width: 17%; padding-left: 10px;">Remove</td>
+ 				</tr>
+ 				<tr ng-repeat="teamPlayer in teamPlayers" ng-class="{'gray-player' : $even, 'other-player' : $odd}" style="text-align: center; font-weight: bold; font-size: 12px;">
+ 					
+ 					<td class="playerListAreaLogo"><img ng-src="img/logos/{{teamPlayer.team}}.png" alt="logo"/> </td>
+ 					<td class="playerListAreaName">{{teamPlayer.name}}</td>
+ 					<td class="playerListAreaPosition">{{teamPlayer.position}}</td>
+ 					<td class="playerListAreaPrice">&#36;{{teamPlayer.price}}</td>
+ 					<td class="playerListAreaStat">{{teamPlayer.stat}} {{teamPlayer.statVal}}</td>
+ 					<td><a href ng-click="removeFromTeam(teamPlayer, $index)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a></td>
+ 					</div>
+ 				</tr>
+ 			</table>
+ 		</div>
+		<br>
+		<button type="button" class="btn btn-success btn-block" ng-click="submitTeam()">Save</button><br/>
+	</div>
+</div>
+<div ng-hide="currentUser" class="notSignedIn">
+	<h3>Please Log-in to Select a Team</h3>
+	<a href="/"> <button type="button" class="btn btn-default">Login</button></a>
+</div>

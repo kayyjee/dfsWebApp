@@ -1,0 +1,43 @@
+<div class="col-md-12">
+	<div  ng-show="currentUser">
+		<div class=resultsArea ng-show="hasResults">
+			<div class="results-table" align="center">
+				<table>
+					<tr style=" font-size: 13px;background-color:#202020; color:#dddddd; font-weight: bold;">
+ 					
+ 						<td class="userResultDate">Date</td>
+ 						<td class="userResultPlayer1"></td>
+ 						<td class="userResultPlayer2"></td>
+ 						<td class="userResultPlayer3">Team</td>
+ 						<td class="userResultPlayer4"></td>
+ 						<td class="userResultPlayer5"></td>
+ 						<td class="userResultScore">Fantasy Points</td>
+ 						<td class="userResultRank">Rank</td>
+ 						<td class="userResultEntrants">Total Entrants</td>
+ 						<td class="userResultWinningUser">Winning User</td>
+ 						<td class="userResultWinningScore">Winning Score</td>
+ 						<td class="userResultDownloadLink"></td>
+ 					</tr>
+					<tr ng-repeat="userResult in userResults" ng-class="{'gray-userResult' : $even, 'other-userResult' : $odd}" style=" font-size: 12px; background-color:#ddd; color:#200202; font-weight: bold;">
+ 					
+ 						<td class="userResultDate">{{userResult.date}}</td>
+ 						<td class="userResultPlayer1">{{userResult.player1}}&nbsp;&nbsp;{{userResult.player1Score}}</td>
+ 						<td class="userResultPlayer2">{{userResult.player2}}&nbsp;&nbsp;{{userResult.player2Score}}</td>
+ 						<td class="userResultPlayer3">{{userResult.player3}}&nbsp;&nbsp;{{userResult.player3Score}}</td>
+ 						<td class="userResultPlayer4">{{userResult.player4}}&nbsp;&nbsp;{{userResult.player4Score}}</td>
+ 						<td class="userResultPlayer5">{{userResult.player5}}&nbsp;&nbsp;{{userResult.player5Score}}</td>
+ 						<td class="userResultScore">{{userResult.fpoints}}</td>
+ 						<td class="userResultRank">{{userResult.rank}}</td>
+ 						<td class="userResultEntrants">{{userResult.totalEntrants}}</td>
+ 						<td class="userResultWinningUser">{{userResult.winningUser}}</td>
+ 						<td class="userResultWinningScore">{{userResult.winningScore}}</td>
+ 						<td class="userResultDownloadLink"><a ng-href="{{userResult.dlink}}" download="{{userResult.date}}"> details</a></td>
+ 					</tr>
+				</table>
+			</div>
+		</div>
+		<div ng-hide="hasResults">
+			<h4 style="text-align: center; color: #CCCCCC;">Nothing to see here!</h4>
+		</div>
+	</div>
+</div>

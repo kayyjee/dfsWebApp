@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html ng-app="LaxApp">
+	<head>
+		<title>FNTSY LAX</title>
+		<link rel="icon" href="/img/laxIcon.png">
+		<script src="jquery.js" type="text/javascript"></script>
+		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="style/style.css">
+		<script type="text/javascript" src="angular.js"></script>
+		<script type="text/javascript" src="angular_cookies.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<script type="text/javascript" src="angular_routes.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
+		<script type="text/javascript">
+
+
+
+		var app = angular.module('LaxApp', ['ngRoute', 'ngCookies']);
+
+		
+		app.config(function($routeProvider, $locationProvider) {
+  			$locationProvider.hashPrefix('');
+			
+			$routeProvider
+
+			.when('/home', {
+				templateUrl: 'home.html',
+				controller: 'homeController',
+			})
+
+			.when('/about', {
+				templateUrl: 'about.html',
+				controller: 'aboutController',
+			})
+
+			.when('/rules', {
+				templateUrl: 'rules.html',
+				controller: 'rulesController',
+			})
+
+			.when('/results', {
+				templateUrl: 'results.html',
+				controller: 'resultsController',
+			})
+
+			.when('/profile', {
+				templateUrl: 'profile.html',
+				controller: 'profileController',
+			})
+
+			.when('/', {
+				templateUrl: 'home.html',
+				controller: 'homeController',
+
+			})
+			.when('/signup', {
+				templateUrl: 'signup.html',
+				controller: 'signupController',
+
+			})
+
+			.when('/pickplayers', {
+				templateUrl: 'pickplayers.html',
+				controller: 'pickplayersController',
+			})
+
+		});
+
+		app.run(function($rootScope, $cookies, $http){
+			
+			//checks if the first game has started, if so, locks teams.
+			$rootScope.isLocked=function(){
+				//This is where you will enter the time of the next game day
+				//Remember, when you change the game date to something > current date, 
+				//players will be able to submit new teams
+				
+				$http.get('/schedule', {}).then(function(res){
+					tempGameDate = res.data.nextGameTime
+
+					$rootScope.gameDate=(new Date(tempGameDate).getTime())/1000;
+					$rootScope.todaysDate = ((new Date().getTime())/1000);
+					
+					if (($rootScope.gameDate - $rootScope.todaysDate) <0){
+						$rootScope.unlockTeams = false;
+						
+					}
+					else {
+						$rootScope.unlockTeams = true;
+						
+					}
+					$rootScope.numUsers = res.data.numUsers;
+					
+				});
+			};		
+				
+			function socketStuff(){
+				$rootScope.socket = io.connect();
+			}
+
+
+
+			//on user logout, remove cookies
+			$rootScope.logout = function(){
+				//needs to come first or disconnect chat message won't be emitted
+				$rootScope.socket.emit('user logout', $rootScope.currentUser);
+				$cookies.remove('token');
+				$cookies.remove('currentUser');
+				$cookies.remove('tc');
+				//$cookies.remove('joinedChat');
+
+				$rootScope.token = null;
+				$rootScope.teamChoice = null;
+				$rootScope.currentUser = null;
+				$rootScope.joinedChat = null;
+				
+				
+				window.location.href = "/"
+				
+			};
+
+			//returns the current date in display format
+			function getDate(){
+				var today = new Date();
+				var dd = today.getDate();
+				var mm = today.getMonth()+1; //January is 0!
+				var yyyy = today.getFullYear();
+
+				if(dd<10) {
+    				dd='0'+dd
+				} 
+				if(mm<10) {
+  		 			mm='0'+mm
+				}
+				today = mm+'/'+dd+'/'+yyyy;
+				return today;
+			};
+
+			//check if user has cookies
+			if ($cookies.get('token') && $cookies.get('currentUser')){
+				$rootScope.token = $cookies.get('token');
+				$rootScope.currentUser = $cookies.get('currentUser');
+				$rootScope.teamChoice = $cookies.get('tc');
+				// if ($cookies.get('joinedChat')){
+				// 	$rootScope.joinedChat=true;
+				// }
+
+
+			}
+			$rootScope.theDate= getDate();
+			$rootScope.isLocked();
+		
+
+			socketStuff();
+
+		});
+
+
+
+
+		app.controller('pickplayersController', function($rootScope, $scope, $http, $cookies){
+		
+
+			//called when user clicks submit. 
+			//Checks if user has enough players, and if teams are still unlocked
+			$scope.submitTeam = function(){
+				if (justLocked() == true){
+					
+					window.location.href = "#/home";
+					return;
+				};
+
+				if ($scope.teamPlayers.length != 5){
+					alert("Please select more players.");
+					return;
+				};
+
+				
+				
+					$http.post('/team/submit', 
+					{player1: $scope.teamPlayers[0].id,
+					player2: $scope.teamPlayers[1].id,
+					player3: $scope.teamPlayers[2].id,
+					player4: $scope.teamPlayers[3].id,
+					player5: $scope.teamPlayers[4].id,
+					username: $rootScope.currentUser,
+					theDate: $rootScope.theDate}).then(function(res){
+						alert("Your team has been saved");
+						window.location.href="#/home";
+						
+
+					});
+				};
+			
+			
+			
+				
+			
+			//method takes a scope variable and sorts it with the largest integer coming first
+			function organizeList(list){
+				list.sort(function(a,b) {return (parseFloat(a.price) < parseFloat(b.price)) ? 1 : ((parseFloat(b.price) < parseFloat(a.price)) ? -1 : 0);} ); 
+  			};
+
+  			//returns the average budget remaining after user adds or removes a player
+  			function adjustAvgBudget(){
+  				if ($scope.teamPlayers.length == 5){
+  					return 0;
+				}
+				
+				else {
+  				return Math.round( ($scope.budget / (5-$scope.teamPlayers.length)* 10 ) / 10);
+  				}
+  			}
+
+
+  			//called when user adds a player to their team
+			$scope.addToTeam = function(player, index){
+				if ($scope.teamPlayers.length > 4){
+					alert("You already have 5 players");
+					return;
+				}
+
+				tempBudget = $scope.budget-player.price;
+				if (tempBudget < 0){
+					alert("Sorry, you don't have enough money");
+					return;
+				}
+				$scope.budget-=player.price;
+				$scope.teamPlayers.push(player);
+				$scope.averageBudget=adjustAvgBudget();
+				$scope.players.splice(index, 1);
+				organizeList($scope.teamPlayers);
+			};
+
+			//called when user removes a player from their team
+			$scope.removeFromTeam = function(player, index){
+				$scope.budget = parseFloat($scope.budget) + parseFloat(player.price)
+				$scope.players.push(player);
+				$scope.teamPlayers.splice(index, 1);
+				$scope.averageBudget=adjustAvgBudget();
+				organizeList($scope.players);
+
+			};
+
+			//sets budget(s) when user first enters pick players without a team
+			function getBudget(){
+				$scope.budget = 50000;
+				$scope.averageBudget = 10000;
+			};
+
+			//get the player's from the server that play this day
+			//if a user team already exists, do not include those players in the player pool
+			function getPlayerList(){
+				$http.put('/playerList', {username: $rootScope.currentUser, date: $rootScope.theDate}).then(function(res){
+					$scope.players = res.data;
+					organizeList($scope.players);
+				});
+			};
+
+			//adjust the budget if the user already has a team. 
+			//subtract starting budget with the sum of all the user's players prices
+			//adjust the remaining budget as well
+			function adjustBudget(){
+				$scope.budget -= (parseFloat($scope.teamPlayers[0].price) +
+					parseFloat($scope.teamPlayers[1].price)+
+					parseFloat($scope.teamPlayers[2].price) +
+					parseFloat($scope.teamPlayers[3].price) +
+					parseFloat($scope.teamPlayers[4].price));
+				$scope.averageBudget = "     ";
+			}
+
+			//get the user's team from the server
+			//unique identifier's are user and date
+			function getTeamList(){
+				$http.put('/teamList', {username: $rootScope.currentUser, date: $rootScope.theDate}).then(function(res){
+					$scope.teamPlayers = res.data;
+					
+					if ($scope.teamPlayers.length != 0){
+						if ($scope.teamPlayers.length != 5){
+							location.reload();
+						};
+						organizeList($scope.teamPlayers);
+						adjustBudget();
+					}
+				});
+			};
+
+
+			//When user is submitting a team or accessing the pick players page, ensures counter did not just reach 0
+			function justLocked(){
+				$rootScope.todaysDate = ((new Date().getTime())/1000);
+
+					
+				if (($rootScope.gameDate - $rootScope.todaysDate) <0){
+					alert("Sorry, you are too late. The games have started");
+					$rootScope.unlockTeams==false;
+					window.location.href = "#/home";
+					return true;
+					}
+					
+			};
+
+
+			justLocked();
+			$rootScope.currentUser=$cookies.get('currentUser');
+			getBudget();
+			getPlayerList();
+			getTeamList();
+
+		});
+
+
+		app.controller('resultsController', function($rootScope, $scope, $http, $cookies){
+			function getResults(){
+				$http.put('/users/results', {username: $rootScope.currentUser}).then(function(res){
+				$scope.userResults=res.data;
+				
+					
+				if ($scope.userResults.length==0){
+					$scope.hasResults==null;
+					
+				}
+				else{
+					
+					$scope.hasResults=true;
+				}
+			
+
+					
+				
+
+
+					//location.reload();
+				}, function(err){
+					console.log(err)
+				});	
+
+
+			};
+			getResults();
+
+		});
+		
+
+		app.controller('aboutController', function($rootScope, $scope, $http, $cookies){
+
+		});
+
+
+
+
+
+
+
+
+		app.controller('homeController', function($rootScope, $scope, $http, $cookies){
+			function escapeHtml(text) {
+  				return text
+     			.replace(/&/g, "&amp;")
+      			.replace(/</g, "&lt;")
+      			.replace(/>/g, "&gt;")
+      			.replace(/"/g, "&quot;")
+      			.replace(/'/g, "&#039;");
+			}
+
+			
+			
+
+			$scope.submitMessage=function(){
+				if (($scope.textArea != '' )&&($scope.textArea != null)){
+
+					var newMessage = {
+						text:$scope.textArea,
+						user:$rootScope.currentUser,
+						team:$rootScope.teamChoice,
+						time:(new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1"))
+
+					};
+
+
+					$rootScope.socket.emit('send message', newMessage);
+					$scope.textArea='';
+					$inputMessage.focus();
+
+				};
+			};
+
+
+			$rootScope.socket.on('new message', function(data){
+				$messages.append(('<li class="list-item"><div class="message-icon">&nbsp;<img src="img/logos/')+data.data.team+('.png" alt="logo"/>&nbsp;</div><div class="message-username">')+data.data.user+('</div><div class="message-time">')+data.data.time+('&nbsp;</div><div class="message-data">')+escapeHtml(data.data.text)+('</div></li>'));
+				$messages[0].scrollTop = $messages[0].scrollHeight;
+			});
+
+			var $messages = $('.messages');
+			var $inputMessage=$('.form-control');
+			var $chatSubmit=$('.chatSubmit');
+
+			$rootScope.socket.on('user joined', function(data){
+				$messages.append(('<li><div class="message-userJoined">')+data.data+(' has joined</div>'));
+				$rootScope.numUsers=data.numUsers;
+				
+			});
+
+			$rootScope.socket.on('user disconnected', function(data){
+				$messages.append(('<li><div class="message-userDisconnected">')+data.username+(' has left</div>'));
+				$rootScope.numUsers=data.numUsers;
+				
+			});
+
+			//User clicks the join chat button on homepage
+			$scope.joinChat=function(){
+				if ($rootScope.currentUser == null){
+					alert('you must sign-in to chat')
+				}
+
+				else{ 
+					
+					$rootScope.joinedChat=true;
+					$rootScope.socket.emit('new user', $rootScope.currentUser);
+				}
+			}
+
+
+
+
+
+
+			//get the team list to display on the homepage
+			function getTeamList(){
+				
+				
+				$http.put('/teamList', {username: $rootScope.currentUser, date: $rootScope.theDate}).then(function(res){
+					$scope.teamPlayers = res.data;
+					if ($scope.teamPlayers.length != 0){
+						if ($scope.teamPlayers.length != 5){
+							location.reload();
+						}
+					
+						$scope.teamPlayers.sort(function(a,b) {return (parseFloat(a.price) < parseFloat(b.price)) ? 1 : ((parseFloat(b.price) < parseFloat(a.price)) ? -1 : 0);} );
+						$scope.hasTeam=true;
+						
+					}
+				});	
+			}
+				
+
+			
+			function getTimeRemaining(endtime) {
+  					var t = Date.parse(endtime) - Date.parse(new Date());
+  					var seconds = Math.floor((t / 1000) % 60);
+				    var minutes = Math.floor((t / 1000 / 60) % 60);
+				    var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+				    var days = Math.floor(t / (1000 * 60 * 60 * 24));
+				    return {
+					    'total': t,
+					    'days': days,
+					    'hours': hours,
+					    'minutes': minutes,
+					    'seconds': seconds
+				 	};
+				 	
+				}
+
+				function initializeClock(id, endtime) {
+				 	var clock = document.getElementById(id);
+				 	var daysSpan = clock.querySelector('.days');
+				  	var hoursSpan = clock.querySelector('.hours');
+				  	var minutesSpan = clock.querySelector('.minutes');
+				  	var secondsSpan = clock.querySelector('.seconds');
+
+					function updateClock() {
+						
+						var t = getTimeRemaining(endtime);
+						if ($rootScope.unlockTeams!=false){
+
+				   			daysSpan.innerHTML = t.days;
+				    		hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+				    		minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+				    		secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+				   			if (t.total <= 0) {
+					   			clearInterval(timeinterval);
+				   			}
+
+						}
+						else{
+							daysSpan.innerHTML = ('0');
+				    		hoursSpan.innerHTML = ('0');
+				    		minutesSpan.innerHTML = ('0');
+				    		secondsSpan.innerHTML = ('0');
+						}
+				    	
+					}
+
+					updateClock();
+					var timeinterval = setInterval(updateClock, 1000);
+				}
+
+				var deadline = new Date(Date.parse(new Date($rootScope.gameDate*1000)));
+				
+				initializeClock('clockdiv', deadline);
+
+				console.log(deadline/1000);
+				console.log($rootScope.gameDate);
+				
+			
+			//user is logging-in on the homepage
+			$scope.signIn = function(){
+				//validate on server
+				$http.put('/users/signin', {username: $scope.username, password: $scope.password}).then(function(res){
+					console.log($scope.hasTeam);
+					//execute on succesful login
+					$cookies.put('token', res.data.token);
+					$cookies.put('currentUser', $scope.username);
+					$cookies.put('tc', res.data.teamChoice);
+					$rootScope.token = res.data.token;
+					$rootScope.currentUser = $scope.username;
+					$rootScope.teamChoice = res.data.teamChoice;
+
+					getTeamList();
+					$rootScope.hasTeam= res.data.hasTeam;
+					window.location.href = "#/home"
+
+					//location.reload();
+				}, function(err){
+					alert('bad login credentials');
+					location.reload();
+				});
+			}
+			$rootScope.isLocked();
+			getTeamList();
+			
+
+	
+		});
+		
+
+
+		app.controller('signupController', function($scope, $http){
+			
+			$scope.submitSignup = function() {
+				if (($scope.username==null)||($scope.username.length <5)){
+					alert("username must be at least 5 characters");
+					return
+				}
+				if (($scope.username==null)||($scope.username.length >15)){
+					alert("username must be maximum 15 characters");
+					return
+				}
+				
+				var $teamChoice = ($('#teamChoice')).val();
+				var showAlert = false;
+
+
+				if ($teamChoice == null){
+					alert ('Please choose a team');
+					location.reload();
+					return;
+				};
+				
+
+				var newUser ={
+					username: $scope.username,
+					password: $scope.password,
+					teamChoice: $teamChoice
+
+				};
+
+				
+				$http.post('/users', newUser).then(function(res){
+					alert('Thank you for signing-up');
+					window.location.href = "#/"
+				},
+
+				function(err){
+					console.log(err.data);
+					alert(err.data);
+					
+				});
+
+			};
+		});
+	
+
+
+
+
+	</script>
+
+
+
+
+
+	</head>
+	<body>
+		<div class="title-box">
+			<div class="page-title">
+				<h5>&nbsp;</h5>
+				<h3 style="font-family:arial;"> FNTSY LAX </h3>
+			</div>
+		</div>
+
+
+		<nav class="navbar navbar-default">
+		  	<div class="container-fluid">
+		    	<div class="navbar-header">
+		      		<a class="navbar-brand" href="#" ">FNTSY LAX</a>
+		    	</div>
+		    	<ul class="nav navbar-nav">
+		     		<li><a href="#">Home</a></li>
+		      		<li ng-show="currentUser && unlockTeams"><a href="#/pickplayers">Pick Players</a></li>
+		     		 <li ng-show="currentUser"><a href="#/results">Past Results</a></li>
+		      		<li><a href="#/rules">Rules</a></li>
+		      		<li><a href="#/about">About</a></li>
+		    	</ul>
+		    	<ul class="nav navbar-nav navbar-right">
+		      	<li><a href="#/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+		      	<li ng-show="currentUser"><a href="#/home"><span class="glyphicon glyphicon-user"></span> {{currentUser}}</a></li>
+		      	<li ng-show="currentUser"><a href ng-click="logout()"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+		    	</ul>
+		  	</div>
+		</nav>		
+	</body>
+</html>

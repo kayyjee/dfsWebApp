@@ -1,0 +1,503 @@
+	
+	body {
+	
+	background: #444444;
+  	font-family:arial;
+  	font-weight: 100;
+  	height: 100%;
+	}
+
+	h1 {
+  		color: #396;
+  		font-weight: 100;
+  		font-size: 40px;
+  		margin: 40px 0px 20px;
+	}
+
+
+
+
+
+
+
+	#clockdiv {
+		color: #DDD;
+		display: inline-block;
+		font-weight: 100;
+		text-align: center;
+		font-size: 30px;
+
+	}
+
+	#clockdiv > div{
+		padding: 10px;
+		border-radius: 3px;
+		background: #662320;
+		display: inline-block;
+	}
+
+	#clockdiv div > span{
+		padding: 15px;
+		border-radius: 3px;
+		background: #bf423b;
+		display: inline-block;
+	}
+
+
+
+
+
+
+
+
+
+
+	.budget{
+		margin-top: 50px;
+		background-color: #202020;
+		border: 3px solid #202020;
+		border-radius:4px;
+		padding: 10px;
+		color: #DDDDDD;
+		font-weight:bold;
+	}
+
+	.btn-block{
+		height:39.67px;
+	}
+
+	.btn-editTeam{
+		width:100%;
+	}
+
+	.chatArea{
+		background-color: #202020;
+		height:82%;
+		overflow-y: hidden;
+	}
+
+	.chatContainer {
+		border: 1px solid #000000;
+		border-radius:4px;  
+		width: 300px;  
+		display: block;
+		height: 450px; 	
+	}
+
+	.chatHeader {
+		display: inline;
+	}
+
+	.formControl {
+		background-color: #333333;
+		color:#EEEEEE;
+		font-size:90%;
+		outline: none;
+		height:39.67px;
+		padding-top: 6px;
+   		padding-right: 12px;
+    	padding-bottom: 6px;
+    	padding-left: 12px;
+    	border: 1px solid #ccc;
+    	width:100%;
+    	border-radius: 4px;
+    	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	}
+
+	.form-group {
+		margin-bottom: none;
+		height: 100%;
+	}
+
+	.glyphicon-numUsers {
+		float: right;
+		display: inline;
+	}
+
+	.gray-player {
+		background-color: #ddd;
+	}
+
+	.hideoption { 
+		display:none; 
+		visibility:hidden; 
+		height:0; 
+		font-size:0; 
+	}
+
+	.homeLeftColumn {
+		height:450px;
+		display: block;
+		width:100%;
+	}
+
+	.instructions {
+		color:#DDDDDD;
+		margin-left:25px;
+	}
+
+	
+	.list-item {
+		padding: 0;
+		overflow-wrap: break-word;
+		background-color: #202020;
+		border-radius:3px;
+		border-bottom:1px solid #DDDDDD;
+	}
+
+	.login-box {
+		border: 1px solid #111111;
+		border-radius:4px;
+		padding: 15px;
+		background-color: #202020;
+  		margin: 0 auto;
+	}
+
+	.login-label {
+		color:#DDDDDD;
+	}
+
+	.messageArea {
+		height: 8%;
+	}
+	
+	.messageArea-NotLoggedIn {
+		margin-bottom:0px;
+		height: 39.67px;
+		text-align: center;
+		color:#888888;
+	}
+
+	.message-data {
+		font-size:90%;
+		width:100%;
+		text-align: left;
+		color:#EEEEEE;
+		padding-left: 45px;
+
+	}
+
+
+	.message-icon {
+		padding-top: 3px;
+		display: inline-block;
+	}
+
+	.message-time {
+		font-size:75%;
+		padding-top: 3px;
+		padding-right:3px;
+		float: right;
+		display: inline;
+		color:#CCCCCC;
+	}
+
+	.message-userDisconnected {
+		font-size:80%;
+		padding-top: 2px;
+		text-align:center;
+		padding-bottom: 2px;
+		color:#EEEEEE;
+	}
+
+	.message-userJoined {
+		font-size:80%;
+		padding-top: 2px;
+		padding-bottom: 2px;
+		text-align:center;
+		color:#EEEEEE;
+	}
+
+	
+	.message-username {
+		font-size:90%;
+		display: inline;
+		font-weight: bold;
+		color:#FFFFFF;
+	}
+
+	.messages {
+  		height: 100%;
+		overflow-y: scroll;
+		font-family: arial;
+  		padding:0;
+  		list-style-type: none;
+  		background-color: var(--mainColor);
+	}
+
+	.messages::-webkit-scrollbar {
+    width: 8px;
+	}	
+ 
+	.messages::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	}
+ 
+	.messages::-webkit-scrollbar-thumb {
+  	background-color: darkgrey;
+  	outline: 1px solid slategrey;
+	}
+	
+	.middleColumn {
+		height:450px;
+		text-align: center;
+		background-color:#202020;
+		border: 1px solid #111111;
+		width:95%;
+		color:#DDDDDD;
+		font-size:15px;
+		padding:20px;
+		display: inline-block;
+		border-radius:4px;
+	}
+
+	.navbar {
+		background-color: #222222;
+		color:#CCCCCC;
+	}
+
+	.new-player {
+		border: 1px solid #ddd;
+		border-radius:4px;
+		padding:20px;
+		margin-bottom:10px;
+		width: 100%;
+	}
+
+	.nextGameLabel {
+		font-size: 16px;
+		padding-top: 40px;
+		font-size: 14px;	
+	}
+
+	.notSignedIn {
+		margin-left:10px;
+		text-align:center;
+		color: #DDDDDD;
+	}
+
+	.notWell {
+		font-size: 15px;
+		padding-top: 10px;
+		padding-bottom: 15px;
+		text-align: center;
+		background-color: #050505;
+		color: #EEEEEE;
+		height:10%;
+	}
+
+	.other-player {
+		background-color: #bbb;
+	}
+
+	.page-title {
+		vertical-align: middle;
+		color: #fff;
+		height:150px;
+		font-family:Helvetica Neue;
+		font-size: 100px;
+		background-color:  rgba(75, 75,75, 0.5);
+	}
+
+	.page-title a {
+		color: #fff;
+	}
+	
+	.pickPlayers-label {
+		text-align: center;
+		color:#DDDDDD;
+	}
+
+
+	.player-avgPoints{
+		font-weight: bold;
+	}
+
+	.player-name{
+		font-weight: bold;
+	}
+
+	.player-price{
+		font-weight: bold;
+	}
+
+	.player-text {
+		font-size: 26px;
+	}
+
+	.player-user{
+		color:#666;
+	}
+
+	.playerListArea::-webkit-scrollbar {
+    width: 5px;
+	}	
+ 
+	.playerListArea::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	}
+ 
+	.playerListArea::-webkit-scrollbar-thumb {
+  	background-color: darkgrey;
+  	outline: 1px solid slategrey;
+	}
+
+	.playerListArea {
+		overflow-y: scroll;
+		height: 293px;
+		width: 100%;
+		background-color: #CCCCCC;
+		border: 3px solid #202020;
+		border-radius:4px;
+	}
+
+	.playerListAreaLogo {
+		width: 10%;
+		padding:12px;
+	}
+
+	.playerListAreaName {
+		width: 33%;
+		padding:12px;
+	}
+
+	.playerListAreaPosition {
+		width: 8%;
+		padding:12px;
+	}
+
+	.playerListAreaPrice { 
+		width: 12%;
+		padding:12px;
+	}
+
+	.playerListAreaStat {
+		width:20%;
+	}
+
+	.playerListAreaStatVal {
+	}
+
+	.playerListRow {
+		padding:10px;
+	}
+
+	.player-position {
+		display: inline;
+		text-align: center;
+	}
+
+	.rulesTable td { 
+		padding-left: 12px;
+		padding: 6px;
+		border:1px solid #333;
+	}
+
+	.results td {
+		padding-left: 12px;
+		padding: 6px;
+		border:1px solid #333;
+	}
+	
+	.results-table {
+		text-align: center; 
+		float:center;
+		overflow-y: scroll;
+		max-height: 500px;
+		width: 75%;
+		margin:auto;
+		border: 1px solid #111111;
+		border-radius:4px;
+	}
+
+	.results-table td {
+		padding:10px;
+	}
+
+
+
+	.results-table::-webkit-scrollbar {
+    width: 2px;
+	}	
+ 
+	.results-table::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	}
+ 
+	.results-table::-webkit-scrollbar-thumb {
+  	background-color: darkgrey;
+  	outline: 1px solid slategrey;
+	}
+
+	.rowFeed {
+		margin-left: 100px;
+		margin-right: 100px;
+		margin-top: 100px;
+	}
+
+	.rowFeed h3 {
+			border: 1px solid #333;
+			padding:20px;
+	}
+
+	.signup-box {
+		width: 75%;
+  		margin: 0 auto;
+	}
+
+	.signup-form { 
+		border: 1px solid #111111;
+		border-radius:4px;
+		padding: 15px;
+		background-color: #202020;
+  		margin: 0 auto
+	}
+
+	.smalltext {
+		padding-top: 5px;
+		font-size: 16px;
+	}
+
+	.teamListArea {
+		font-size: 12px;
+		background-color: #CCCCCC;
+		overflow-y: scroll;
+		height: 300px;
+		border: 3px solid #333;
+		border-radius:4px;
+		padding-bottom:2px;
+	}
+
+	.title-box {
+		height: 150px;
+		text-align: center;
+		background-image: url('/img/background_lax.png');
+		text-align: center;
+		background-size: cover;
+		background-position: center;
+	}
+
+	.underYourTeam {
+		padding-top: 20px;
+	}	
+
+	.user-icon {
+		font-size: 20px;
+	}
+
+	.youDontHaveTeam {
+		color:#EEEEEE;
+	}
+
+	.yourTeamArea {
+		background-color: #202020;
+		border: 1px solid #111111;
+		padding-top: 30px;
+		padding-bottom: 30px;
+		padding-left: 20px;
+		padding-right: 20px;
+		border-radius:4px;
+		color:#DDDDDD;
+		height:100%;
+	}

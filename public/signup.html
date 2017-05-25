@@ -1,0 +1,26 @@
+<div class="col-md-12">
+	<div class="signup-box">
+		<div class="signup-form">
+			<h4 class=login-label>Signup</h4>
+			<div class="input-group">
+				<input type="text" placeholder="Username" ng-model="username" size="30" maxlength="20"><br><br>
+				<input type="password" placeholder="Password" ng-model="password" size="30" maxlength="20"><br><br>
+				<select required class="choose-team" id="teamChoice" >
+					<option selected disabled class="hideoption" value="selectATeam">Select Your Team</option>
+					<option value="buffalo">Buffalo Bandits</option>
+					<option value="colorado">Colorado Mammoth</option>
+					<option value="calgary">Calgary Roughriders</option>
+					<option value="georgia">Georgia Storm</option>
+					<option value="rochester">Rochester Knighthawks</option>
+					<option value="newengland">New England Black Wolves</option>
+					<option value="saskatchewan">Saskatchewan Rush</option>
+					<option value="toronto">Toronto Rock</option>
+					<option value="vancouver">Vancouver Stealth</option>
+				</select><br><br>
+				<button type="button" class="btn-primary btn-lg" ng-click="submitSignup()">Signup</button>
+				<br><br>
+				<a href="#/">Already a user? Login</a>
+			</div>
+		</div>
+	</div>
+</div>
