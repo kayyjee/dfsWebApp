@@ -1,4 +1,4 @@
-Daily Fantasy Sports WebApp
+# Daily Fantasy Sports WebApp
 
 Building a DFS WebApp that specializes in Lacrosse (NLL)
 
